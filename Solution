@@ -1,0 +1,94 @@
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int heap[100005];
+
+void insertIntoHeap(int data,int &lastIndex)
+{    
+    lastIndex++;
+    //cout<<lastIndex<<"\n";
+    heap[lastIndex]=data;
+    //justify this elements location upto root
+    
+    for(int rootIndex=lastIndex;rootIndex>=0;rootIndex=(rootIndex-1)/2)
+    {
+        int indexOfrootParent=(rootIndex-1)/2;
+        if(heap[rootIndex]>heap[indexOfrootParent])
+        {
+            swap(heap[rootIndex],heap[indexOfrootParent]);
+        }
+        else
+            break;
+        
+        if(indexOfrootParent==0)
+            break;
+    }
+}
+
+
+void heapify(int rootIndex, const int lastIndex)
+{
+    int indexOfSmallestNumber=rootIndex;
+    int leftIndex=rootIndex*2+1;
+    int rightIndex=leftIndex+1;
+    
+    if(leftIndex<=lastIndex && heap[leftIndex]>heap[rootIndex])
+    {
+        indexOfSmallestNumber=leftIndex;
+    }
+    else if(rightIndex<=lastIndex && heap[rightIndex]>heap[rootIndex])
+    {
+        indexOfSmallestNumber=rightIndex;
+    }
+    
+    
+    if(indexOfSmallestNumber!=rootIndex)
+    {
+        swap(heap[indexOfSmallestNumber],heap[rootIndex]);
+        heapify(indexOfSmallestNumber,lastIndex);
+    }
+}
+
+void deleteFromHeap(int data, int &lastIndex)
+{
+    for(int i=0;i<=lastIndex;i++)
+    {
+        if(heap[i]==data)
+        {
+            swap(heap[i],heap[lastIndex]);
+            lastIndex--;
+            heapify(i,lastIndex);
+            break;
+        }
+    }
+}
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */ 
+    int tc,operation,x,elementToDelete,lastIndex=-1;
+    
+    stack<int> st;
+    
+    cin>>tc;
+    for(int i=1;i<=tc;i++)
+    {
+        cin>>operation;
+        if(operation==1)
+        {
+            cin>>x;
+            st.push(x);
+            insertIntoHeap(x,lastIndex);
+        }
+        else if(operation==2)
+        {
+            elementToDelete=st.top();
+            st.pop();
+            deleteFromHeap(elementToDelete,lastIndex);
+        }
+        else
+        {
+            cout<<heap[0]<<"\n";
+        }
+    }
+}
