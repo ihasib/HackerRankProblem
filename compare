@@ -1,0 +1,103 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+long heap[100005],lastIndex;
+
+void heapify(int rootIndex)
+{
+    /*if(rootIndex>lastIndex)
+        return;
+        this check must be done upon left annd right
+    */
+    //3 candidate indices for comparison
+    int smallestIndex=rootIndex;
+    int leftIndex=smallestIndex*2+1;
+    int rightIndex=leftIndex+1;
+    
+    
+    //int rootIndex=(curIndex-1)/2;
+    if(leftIndex<=lastIndex && heap[leftIndex]<heap[smallestIndex])
+    {
+        smallestIndex=leftIndex;
+    }
+    if(rightIndex<=lastIndex && heap[rightIndex]<heap[smallestIndex])
+    {
+        smallestIndex=rightIndex;
+    }
+    
+    if(smallestIndex!=rootIndex)
+    {
+        swap(heap[smallestIndex],heap[rootIndex]);    
+        heapify(smallestIndex);//since root is now at smallestIndex //bubble down/go downside
+    }
+    return;
+}
+
+void insert(int data)
+{
+    heap[lastIndex]=data;
+    int currentIndex=lastIndex;
+    
+    for(int rootIndex=(currentIndex-1)/2;rootIndex>=0;)
+    {
+        //int rootIndex=(lastIndex-1)/2;
+        //heapify(rootIndex);     
+        //heapify(i);
+        if(heap[currentIndex]<heap[rootIndex])
+        {
+            swap(heap[currentIndex],heap[rootIndex]); 
+        }
+            if(rootIndex==0)
+                break;
+            rootIndex=(rootIndex-1)/2;//bubble up, go upside
+    }
+}
+
+void deletee(int data)
+{
+    //cout<<"delete\n";
+    for(int i=0;i<=lastIndex;i++)
+    {
+        if(data==heap[i])
+        {
+            //cout<<"iv\n";
+            swap(heap[i],heap[lastIndex]);
+            lastIndex--;
+            heapify(i);
+        }
+    }
+    return;
+}
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */ 
+    long N,op,data;
+    lastIndex=-1;
+        cin>>N;
+        for(int nn=0;nn<N;nn++)
+        {
+            //cout<<nn<<" "<<lastIndex<<"\n";
+            cin>>op;
+            if(op==1)
+            {
+                lastIndex++;
+                cin>>data;
+                insert(data);                                           
+            }
+            else if(op==2)
+            {
+                cin>>data;
+                deletee(data);               
+            }
+            else
+            {
+                cout<<heap[0]<<endl;
+            }
+        }
+    
+    return 0;
+}
