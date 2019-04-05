@@ -1,4 +1,4 @@
-int heap[100005];
+//int heap[100005]; within main function
 
 void bubbleUpCheckUptoRoot(int currentIndex,int *heap){
     
@@ -6,9 +6,10 @@ void bubbleUpCheckUptoRoot(int currentIndex,int *heap){
     while(currentIndex>=0)
     {
         int parentIndex=(currentIndex-1)/2;
-        if(heap[currentIndex]>heap[parentIndex])
+        if (heap[currentIndex] < heap[parentIndex]) // comparison
         {
-            swap(heap[currentIndex],heap[parentIndex]);
+          swap(heap[currentIndex], heap[parentIndex]);
+          currentIndex = parentIndex;
         }
         else
             break;
@@ -19,29 +20,27 @@ void bubbleUpCheckUptoRoot(int currentIndex,int *heap){
 }
 
 
-void insertIntoHeap(int data,int &lastIndex)
-{    
+void insertIntoHeap(int data,int &lastIndex){    
     lastIndex++;
-    //cout<<lastIndex<<"\n";
     heap[lastIndex]=data;
     
     bubbleUpCheckUptoRoot(lastIndex,heap);
 }
 
 
-void bubbleDownHeapify(int parentIndex, const int lastIndex)
-{
+void bubbleDownHeapify(int parentIndex, const int lastIndex){
     int indexOfSmallestNumber=parentIndex;
     int leftIndex=parentIndex*2+1;
     int rightIndex=leftIndex+1;
     
-    if(leftIndex<=lastIndex && heap[leftIndex]>heap[parentIndex])
+    if(leftIndex<=lastIndex && heap[leftIndex]<heap[indexOfSmallestNumber])//comparison
     {
         indexOfSmallestNumber=leftIndex;
     }
-    else if(rightIndex<=lastIndex && heap[rightIndex]>heap[parentIndex])
+    if (rightIndex <= lastIndex &&
+        heap[rightIndex] < heap[indexOfSmallestNumber]) // comparison //not else-if rather only if
     {
-        indexOfSmallestNumber=rightIndex;
+      indexOfSmallestNumber = rightIndex;
     }    
     
     if(indexOfSmallestNumber!=parentIndex)
@@ -51,8 +50,7 @@ void bubbleDownHeapify(int parentIndex, const int lastIndex)
     }
 }
 
-void deleteFromHeap(int data, int &lastIndex)
-{
+void deleteFromHeap(int data, int &lastIndex){
     for(int i=0;i<=lastIndex;i++)
     {
         if(heap[i]==data)
@@ -61,7 +59,7 @@ void deleteFromHeap(int data, int &lastIndex)
             lastIndex--;
             int parentIndex=(i-1)/2;
             
-            if(i>0 && heap[i]>heap[parentIndex])
+            if(i>0 && heap[i]<heap[parentIndex])//comparison
             {
                 bubbleUpCheckUptoRoot(i,heap);
             }
