@@ -49,8 +49,11 @@ void insert(int data)
         //heapify(i);
         if(heap[currentIndex]<heap[rootIndex])
         {
-            swap(heap[currentIndex],heap[rootIndex]); 
+            swap(heap[currentIndex],heap[rootIndex]);
+            currentIndex=rootIndex;
         }
+        else
+            break;
             if(rootIndex==0)
                 break;
             rootIndex=(rootIndex-1)/2;//bubble up, go upside
