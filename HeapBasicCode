@@ -1,73 +1,56 @@
 //int heap[100005]; within main function
 
-void bubbleUpCheckUptoRoot(int currentIndex,int *heap){
-    
-    //justify this elements location upto root    
-    while(currentIndex>=0)
-    {
-        int parentIndex=(currentIndex-1)/2;
-        if (heap[currentIndex] < heap[parentIndex]) // comparison
-        {
-          swap(heap[currentIndex], heap[parentIndex]);
-          currentIndex = parentIndex;
-        }
-        else
-            break;
-        
-        if(parentIndex==0)
-            break;
-    }
+void bubbleDownHeapify(int currentIndex, const int lastIndex, int *heap) {
+  int indexOfSmallestNumber = currentIndex;
+  int leftIndex = currentIndex * 2 + 1;
+  int rightIndex = leftIndex + 1;
+
+  if (leftIndex <= lastIndex && heap[leftIndex] < heap[indexOfSmallestNumber]) {
+    indexOfSmallestNumber = leftIndex;
+  }
+  if (rightIndex <= lastIndex &&
+      heap[rightIndex] < heap[indexOfSmallestNumber]) {
+    indexOfSmallestNumber = rightIndex;
+  }
+
+  if (indexOfSmallestNumber != currentIndex) {
+    swap(heap[indexOfSmallestNumber], heap[currentIndex]);
+    bubbleDownHeapify(indexOfSmallestNumber, lastIndex, heap);
+  }
 }
 
+void bubbleUpCheckUptoRoot(int currentIndex, int *heap) {
+  while (currentIndex > 0) {
+    int parentIndex = (currentIndex - 1) / 2;
 
-void insertIntoHeap(int data,int &lastIndex){    
-    lastIndex++;
-    heap[lastIndex]=data;
-    
-    bubbleUpCheckUptoRoot(lastIndex,heap);
+    if (heap[currentIndex] < heap[parentIndex]) {
+      swap(heap[currentIndex], heap[parentIndex]);
+      currentIndex = parentIndex;
+    } else
+      break;
+  }
 }
 
+void insertIntoHeap(int data, int &lastIndex, int *heap) {
+  heap[++lastIndex] = data;
 
-void bubbleDownHeapify(int parentIndex, const int lastIndex){
-    int indexOfSmallestNumber=parentIndex;
-    int leftIndex=parentIndex*2+1;
-    int rightIndex=leftIndex+1;
-    
-    if(leftIndex<=lastIndex && heap[leftIndex]<heap[indexOfSmallestNumber])//comparison
-    {
-        indexOfSmallestNumber=leftIndex;
-    }
-    if (rightIndex <= lastIndex &&
-        heap[rightIndex] < heap[indexOfSmallestNumber]) // comparison //not else-if rather only if
-    {
-      indexOfSmallestNumber = rightIndex;
-    }    
-    
-    if(indexOfSmallestNumber!=parentIndex)
-    {
-        swap(heap[indexOfSmallestNumber],heap[parentIndex]);
-        bubbleDownHeapify(indexOfSmallestNumber,lastIndex);
-    }
+  bubbleUpCheckUptoRoot(lastIndex, heap);
 }
 
-void deleteFromHeap(int data, int &lastIndex){
-    for(int i=0;i<=lastIndex;i++)
-    {
-        if(heap[i]==data)
-        {
-            swap(heap[i],heap[lastIndex]);
-            lastIndex--;
-            int parentIndex=(i-1)/2;
-            
-            if(i>0 && heap[i]<heap[parentIndex])//comparison
-            {
-                bubbleUpCheckUptoRoot(i,heap);
-            }
-            else
-            {
-                bubbleDownHeapify(i,lastIndex);
-            }
-            break;
-        }
+void deleteFromHeap(int data, int &lastIndex, int *heap) {
+  int i;
+  for (i = 0; i <= lastIndex; i++) {
+    if (heap[i] == data) {
+      swap(heap[i], heap[lastIndex]);
+      lastIndex--;
+      break;
     }
+  }
+
+  int parentIndex = (i - 1) / 2;
+  if (heap[i] < heap[parentIndex]) {
+    bubbleUpCheckUptoRoot(i, heap);
+  } else {
+    bubbleDownHeapify(i, lastIndex, heap);
+  }
 }
